@@ -4,12 +4,12 @@ RNA-seq analysis of physalis samples
 Download datasets
 
 ``` bash
-mkdir input
-wget -O input/elicitors.salmon.merged.gene_counts.tsv https://zenodo.org/records/13902262/files/elicitors.salmon.merged.gene_counts.tsv?download=1
-wget -O input/elicitors.salmon.merged.gene_tpm.tsv https://zenodo.org/records/13902262/files/elicitors.salmon.merged.gene_tpm.tsv?download=1
-wget -O input/tissues.salmon.merged.gene_counts.tsv https://zenodo.org/records/13902262/files/tissues.salmon.merged.gene_counts.tsv?download=1
-wget -O input/tissues.salmon.merged.gene_tpm.tsv https://zenodo.org/records/13902262/files/tissues.salmon.merged.gene_tpm.tsv?download=1
+wget --no-verbose -O rnaseq_input.tar.gz https://zenodo.org/records/13908795/files/rnaseq_input.tar.gz?download=1
+tar -xzf rnaseq_input.tar.gz
+rm -r rnaseq_input.tar.gz
 ```
+
+    ## 2024-10-09 13:49:40 URL:https://zenodo.org/records/13908795/files/rnaseq_input.tar.gz?download=1 [10900208/10900208] -> "rnaseq_input.tar.gz" [1]
 
 ``` r
 library(tidyverse)
@@ -76,14 +76,14 @@ Outliers:
 - “X4_1_S3” young leaf1
 
 ``` r
-tissues_counts <- read_tsv("input/tissues.salmon.merged.gene_counts.tsv") %>%
+tissues_counts <- read_tsv("rnaseq_input/tissues.salmon.merged.gene_counts.tsv") %>%
   dplyr::select(!c('gene_id')) %>%
   mutate(gene_name = gsub("gene:", "", gene_name)) %>% 
   column_to_rownames("gene_name") %>%
   as.matrix() %>%
   round()
 
-tissues_counts_no_outliers <- read_tsv("input/tissues.salmon.merged.gene_counts.tsv") %>%
+tissues_counts_no_outliers <- read_tsv("rnaseq_input/tissues.salmon.merged.gene_counts.tsv") %>%
   dplyr::select(!c('gene_id', 'X9_3_S28', 'X4_1_S3')) %>%
   mutate(gene_name = gsub("gene:", "", gene_name)) %>% 
   column_to_rownames("gene_name") %>%
@@ -302,7 +302,7 @@ DESeq2::plotPCA(vst_tissue_no_outliers, intgroup = c("Condition", "Replicate"), 
 
 ``` r
 elicitors_counts <- 
-  read_tsv("input/elicitors.salmon.merged.gene_counts.tsv") %>%
+  read_tsv("rnaseq_input/elicitors.salmon.merged.gene_counts.tsv") %>%
   dplyr::select(!('gene_id')) %>%
   mutate(gene_name = gsub("gene:", "", gene_name)) %>% 
   column_to_rownames("gene_name") %>%
@@ -403,7 +403,7 @@ DESeq2::plotPCA(vst_elicitors, intgroup = c("Tissue", "Condition"), returnData =
 ## Figure 1B
 
 ``` r
-tissues_tpm <- read_tsv("input/tissues.salmon.merged.gene_tpm.tsv") %>%
+tissues_tpm <- read_tsv("rnaseq_input/tissues.salmon.merged.gene_tpm.tsv") %>%
   dplyr::select(!('gene_id')) %>%
   mutate(gene_name = gsub("gene:", "", gene_name))
 ```
@@ -766,7 +766,7 @@ ggsave('figures/Elicitors_LFC_heatmap.pdf',
 
 ``` r
 elicitors_tpm <- 
-  read_tsv("input/elicitors.salmon.merged.gene_tpm.tsv") %>%
+  read_tsv("rnaseq_input/elicitors.salmon.merged.gene_tpm.tsv") %>%
   rename_with(~ gsub("JA", "MeJA", .x, fixed = TRUE)) %>%
   dplyr::select(!('gene_name'))
 ```
@@ -892,7 +892,7 @@ Load Expression as Non-normalised Counts
 Tissue
 
 ``` r
-tissues_counts_cemitool <- read_tsv("input/tissues.salmon.merged.gene_counts.tsv") %>%
+tissues_counts_cemitool <- read_tsv("rnaseq_input/tissues.salmon.merged.gene_counts.tsv") %>%
   dplyr::select(!('gene_id')) %>%
   mutate(Gene_Name= gsub("gene:", "", gene_name)) %>%
   select(!c("gene_name", "X9_3_S28", "X4_1_S3"))
@@ -901,7 +901,7 @@ tissues_counts_cemitool <- read_tsv("input/tissues.salmon.merged.gene_counts.tsv
 Elicitors
 
 ``` r
-elicitor_counts_cemitool <- read_tsv("input/elicitors.salmon.merged.gene_counts.tsv") %>%
+elicitor_counts_cemitool <- read_tsv("rnaseq_input/elicitors.salmon.merged.gene_counts.tsv") %>%
   dplyr::select(!('gene_id')) %>%
   mutate(Gene_Name= gsub("gene:", "", gene_name)) %>%
   select(!gene_name)
@@ -1187,5 +1187,5 @@ ggsave('figures/Modules_heatmap.svg', bg = 'white', width = 7, height = 4)
 # Remove input datasets
 
 ``` bash
-rm -r input
+rm -r rnaseq_input
 ```

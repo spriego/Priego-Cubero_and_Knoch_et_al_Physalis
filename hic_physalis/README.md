@@ -1,27 +1,21 @@
-A/B subcompartments
+HiC analysis
 ================
 
 Download datasets
 
 ``` bash
-mkdir input
-mkdir input/individual_replicates
-mkdir input/merged_replicates
+wget --no-verbose -O hic_input.tar.gz https://zenodo.org/records/13908795/files/hic_input.tar.gz?download=1
+tar -xzf hic_input.tar.gz
+rm -r hic_input.tar.gz
 
 mkdir annotation
-
-wget -O input/individual_replicates/leaf_R1_41M.hic https://zenodo.org/records/13902262/files/leaf_R1_41M.hic?download=1 
-wget -O input/individual_replicates/leaf_R2_41M.hic https://zenodo.org/records/13902262/files/leaf_R2_41M.hic?download=1
-wget -O input/individual_replicates/root_R1_41M.hic https://zenodo.org/records/13902262/files/root_R1_41M.hic?download=1
-wget -O input/individual_replicates/root_R2_41M.hic https://zenodo.org/records/13902262/files/root_R2_41M.hic?download=1
-
-wget -O input/merged_replicates/leaf_103M.hic https://zenodo.org/records/13902262/files/leaf_103M.hic?download=1
-wget -O input/merged_replicates/root_103M.hic https://zenodo.org/records/13902262/files/root_103M.hic?download=1
-
-wget -O annotation/Phygri1.3.2_gene_models.gff.gz https://labshare.cshl.edu/shares/schatzlab/www-data/pansol/Physalis/grisea/v1.3.2/Phygri1.3.2_gene_models.gff.gz
-
+wget --no-verbose -O annotation/Phygri1.3.2_gene_models.gff.gz https://labshare.cshl.edu/shares/schatzlab/www-data/pansol/Physalis/grisea/v1.3.2/Phygri1.3.2_gene_models.gff.gz
 gunzip annotation/Phygri1.3.2_gene_models.gff.gz
 ```
+
+    ## 2024-10-09 15:51:12 URL:https://zenodo.org/records/13908795/files/hic_input.tar.gz?download=1 [747628811/747628811] -> "hic_input.tar.gz" [1]
+    ## tar: Ignoring unknown extended header keyword 'LIBARCHIVE.xattr.com.apple.FinderInfo'
+    ## 2024-10-09 15:51:23 URL:https://labshare.cshl.edu/shares/schatzlab/www-data/pansol/Physalis/grisea/v1.3.2/Phygri1.3.2_gene_models.gff.gz [7580565/7580565] -> "annotation/Phygri1.3.2_gene_models.gff.gz" [1]
 
 ``` r
 library(tidyverse)
@@ -45,7 +39,7 @@ for (file in 1:nrow(ob_chr_matrices_LR1))
   {
   assign(as.character(ob_chr_matrices_LR1[file,1]), 
        straw(norm = "KR",
-      fname = "/dss/dsslegfs01/pn73so/pn73so-dss-0000/lab/santi/physalis_hic/physalis_hic/input/individual_replicates/leaf_R1_41M.hic",
+      fname = "hic_input/individual_replicates/leaf_R1_41M.hic",
       chr1loc = as.character(ob_chr_matrices_LR1[file,2]),
       chr2loc = as.character(ob_chr_matrices_LR1[file,2]),
       unit = "BP",
@@ -67,7 +61,7 @@ for (file in 1:nrow(ob_chr_matrices_LR2))
   {
   assign(as.character(ob_chr_matrices_LR2[file,1]), 
        straw(norm = "KR",
-      fname = "/dss/dsslegfs01/pn73so/pn73so-dss-0000/lab/santi/physalis_hic/physalis_hic/input/individual_replicates/leaf_R2_41M.hic",
+      fname = "hic_input/individual_replicates/leaf_R2_41M.hic",
       chr1loc = as.character(ob_chr_matrices_LR2[file,2]),
       chr2loc = as.character(ob_chr_matrices_LR2[file,2]),
       unit = "BP",
@@ -89,7 +83,7 @@ for (file in 1:nrow(ob_chr_matrices_RR1))
   {
   assign(as.character(ob_chr_matrices_RR1[file,1]), 
        straw(norm = "KR",
-      fname = "/dss/dsslegfs01/pn73so/pn73so-dss-0000/lab/santi/physalis_hic/physalis_hic/input/individual_replicates/root_R1_41M.hic",
+      fname = "hic_input/individual_replicates/root_R1_41M.hic",
       chr1loc = as.character(ob_chr_matrices_RR1[file,2]),
       chr2loc = as.character(ob_chr_matrices_RR1[file,2]),
       unit = "BP",
@@ -111,7 +105,7 @@ for (file in 1:nrow(ob_chr_matrices_RR2))
   {
   assign(as.character(ob_chr_matrices_RR2[file,1]), 
        straw(norm = "KR",
-      fname = "/dss/dsslegfs01/pn73so/pn73so-dss-0000/lab/santi/physalis_hic/physalis_hic/input/individual_replicates/root_R2_41M.hic",
+      fname = "hic_input/individual_replicates/root_R2_41M.hic",
       chr1loc = as.character(ob_chr_matrices_RR2[file,2]),
       chr2loc = as.character(ob_chr_matrices_RR2[file,2]),
       unit = "BP",
@@ -181,7 +175,7 @@ for (file in 1:nrow(oe_chr_matrices))
   {
   assign(as.character(oe_chr_matrices[file,1]), 
        straw(norm = "KR",
-      fname = "input/merged_replicates/leaf_103M.hic",
+      fname = "hic_input/merged_replicates/leaf_103M.hic",
       chr1loc = as.character(oe_chr_matrices[file,2]),
       chr2loc = as.character(oe_chr_matrices[file,2]),
       unit = "BP",
@@ -362,7 +356,7 @@ ggsave('figures/global_AB_annotation.pdf',
 
 leaf_roi_obs <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/leaf_103M.hic",
+      fname = "hic_input/merged_replicates/leaf_103M.hic",
       chr1loc = "01:114000000:116000000",
       chr2loc = "01:114000000:116000000",
       unit = "BP",
@@ -371,7 +365,7 @@ leaf_roi_obs <-
 
 root_roi_obs <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/root_103M.hic",
+      fname = "hic_input/merged_replicates/root_103M.hic",
       chr1loc = "01:114000000:116000000",
       chr2loc = "01:114000000:116000000",
       unit = "BP",
@@ -478,7 +472,7 @@ Hi-C maps.
 ``` r
 leaf_chr1_20kb <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/leaf_103M.hic",
+      fname = "hic_input/merged_replicates/leaf_103M.hic",
       chr1loc = "01",
       chr2loc = "01",
       unit = "BP",
@@ -491,7 +485,7 @@ leaf_avg_counts_chr1_20kb <- leaf_chr1_20kb$counts %>% mean(na.rm = TRUE)
 
 root_chr1_20kb <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/root_103M.hic",
+      fname = "hic_input/merged_replicates/root_103M.hic",
       chr1loc = "01",
       chr2loc = "01",
       unit = "BP",
@@ -615,7 +609,7 @@ expect that the whole cluster will loop out of the neighbouring region
 ``` r
 leaf_roi_obs_ab_compartment <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/leaf_103M.hic",
+      fname = "hic_input/merged_replicates/leaf_103M.hic",
       chr1loc = "01:108000000:118000000",
       chr2loc = "01:108000000:118000000",
       unit = "BP",
@@ -624,7 +618,7 @@ leaf_roi_obs_ab_compartment <-
 
 leaf_roi_oe_ab_compartment <-  
   straw(norm = "KR",
-      fname = "input/merged_replicates/leaf_103M.hic",
+      fname = "hic_input/merged_replicates/leaf_103M.hic",
       chr1loc = "01:108000000:118000000",
       chr2loc = "01:108000000:118000000",
       unit = "BP",
@@ -895,7 +889,7 @@ ggsave('figures/fig3C_leaf_cor_pca_cluster.pdf',
 
 root_roi_obs_ab_compartment <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/root_103M.hic",
+      fname = "hic_input/merged_replicates/root_103M.hic",
       chr1loc = "01:108000000:118000000",
       chr2loc = "01:108000000:118000000",
       unit = "BP",
@@ -906,7 +900,7 @@ root_roi_obs_ab_compartment <-
 
 root_roi_oe_ab_compartment <- 
   straw(norm = "KR",
-      fname = "input/merged_replicates/root_103M.hic",
+      fname = "hic_input/merged_replicates/root_103M.hic",
       chr1loc = "01:108000000:118000000",
       chr2loc = "01:108000000:118000000",
       unit = "BP",
@@ -1164,6 +1158,6 @@ ggsave('figures/root_cor_pca_cluster.pdf',
 # Remove input
 
 ``` bash
-rm -r input
+rm -r hic_input
 rm -r annotation
 ```

@@ -10,10 +10,10 @@ knitr::opts_chunk$set(
 ```
 
 Download datasets 
-```{bash, echo = FALSE, message=FALSE, warning=FALSE}
-#mkdir input
-#mkdir annotation
-
+```{bash, message=FALSE, warning=FALSE}
+wget --no-verbose -O atac_input.tar.gz https://zenodo.org/records/13908795/files/atac_input.tar.gz?download=1
+tar -xzf atac_input.tar.gz
+rm -r atac_input.tar.gz
 ```
 
 
@@ -27,7 +27,7 @@ library(patchwork)
 ## Load count table 
 
 ```{r, message=FALSE, warning=FALSE}
-count_files <- list.files(path = "input", 
+count_files <- list.files(path = "atac_input", 
                     pattern = ".counts", 
                     full.names = T) %>% 
   as_tibble() %>%
@@ -193,7 +193,7 @@ peak_normalised_tidy %>%
 
 ```{r, message=FALSE, warning=FALSE}
 # ROOT 
-peaks_ann_root_rs <- read_tsv('input/root_all_accessible_regions.filtered.narrowPeak.annotation', 
+peaks_ann_root_rs <- read_tsv('atac_input/root_all_accessible_regions.filtered.narrowPeak.annotation', 
            skip = 1,
            col_names = c('Peak_ID', 'Chr',	'Start', 'End',	'Strand', 'Peak_Score', 'Focus_Ratio', 'Annotation') ) %>%
   filter(Chr == 'chr1') %>%
@@ -223,7 +223,7 @@ peaks_ann_root_rs_plot
 
 ```{r, message=FALSE, warning=FALSE}
 # SHOOT 
-peaks_ann_leaf_rs <- read_tsv('input/leaf_all_accessible_regions.filtered.narrowPeak.annotation', 
+peaks_ann_leaf_rs <- read_tsv('atac_input/leaf_all_accessible_regions.filtered.narrowPeak.annotation', 
            skip = 1,
            col_names = c('Peak_ID', 'Chr',	'Start', 'End',	'Strand', 'Peak_Score', 'Focus_Ratio', 'Annotation') ) %>%
   filter(Chr == 'chr1') %>%
@@ -254,3 +254,10 @@ peaks_ann_leaf_rs_plot
 ```{r, Fig2C, fig.height=3, fig.width=5, message=FALSE, warning=FALSE}
 peaks_ann_root_rs_plot | peaks_ann_leaf_rs_plot
 ```
+
+# Remove input
+
+```{bash, message=FALSE, warning=FALSE}
+rm -r atac_input
+```
+

@@ -3,6 +3,14 @@ ATAC-seq analysis
 
 Download datasets
 
+``` bash
+wget --no-verbose -O atac_input.tar.gz https://zenodo.org/records/13908795/files/atac_input.tar.gz?download=1
+tar -xzf atac_input.tar.gz
+rm -r atac_input.tar.gz
+```
+
+    ## 2024-10-09 15:26:29 URL:https://zenodo.org/records/13908795/files/atac_input.tar.gz?download=1 [15322445/15322445] -> "atac_input.tar.gz" [1]
+
 ``` r
 library(tidyverse)
 library(patchwork)
@@ -13,7 +21,7 @@ library(patchwork)
 ## Load count table
 
 ``` r
-count_files <- list.files(path = "input", 
+count_files <- list.files(path = "atac_input", 
                     pattern = ".counts", 
                     full.names = T) %>% 
   as_tibble() %>%
@@ -184,7 +192,7 @@ peak_normalised_tidy %>%
 
 ``` r
 # ROOT 
-peaks_ann_root_rs <- read_tsv('input/root_all_accessible_regions.filtered.narrowPeak.annotation', 
+peaks_ann_root_rs <- read_tsv('atac_input/root_all_accessible_regions.filtered.narrowPeak.annotation', 
            skip = 1,
            col_names = c('Peak_ID', 'Chr',  'Start', 'End', 'Strand', 'Peak_Score', 'Focus_Ratio', 'Annotation') ) %>%
   filter(Chr == 'chr1') %>%
@@ -215,7 +223,7 @@ peaks_ann_root_rs_plot
 
 ``` r
 # SHOOT 
-peaks_ann_leaf_rs <- read_tsv('input/leaf_all_accessible_regions.filtered.narrowPeak.annotation', 
+peaks_ann_leaf_rs <- read_tsv('atac_input/leaf_all_accessible_regions.filtered.narrowPeak.annotation', 
            skip = 1,
            col_names = c('Peak_ID', 'Chr',  'Start', 'End', 'Strand', 'Peak_Score', 'Focus_Ratio', 'Annotation') ) %>%
   filter(Chr == 'chr1') %>%
@@ -249,3 +257,9 @@ peaks_ann_root_rs_plot | peaks_ann_leaf_rs_plot
 ```
 
 ![](figures/atac-Fig2C-1.png)<!-- -->
+
+# Remove input
+
+``` bash
+rm -r atac_input
+```
