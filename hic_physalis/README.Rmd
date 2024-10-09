@@ -1,5 +1,5 @@
 ---
-title: "A/B subcompartments"
+title: "HiC analysis"
 output: rmarkdown::github_document
 ---
 
